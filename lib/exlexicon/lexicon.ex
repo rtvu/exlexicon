@@ -1,4 +1,8 @@
 defmodule ExLexicon.Lexicon do
+  @moduledoc """
+  A lexicon (word list) implemented in Elixir.
+  """
+
   alias ExLexicon.Lexicon
   alias ExLexicon.Lexicon.Node
 
@@ -57,7 +61,7 @@ defmodule ExLexicon.Lexicon do
   Checks if word is in the given 'lexicon'.
   """
   def has_word?(lexicon, word) do
-    
+
   end
   @doc """
   Checks if prefix is in the given 'lexicon'.
