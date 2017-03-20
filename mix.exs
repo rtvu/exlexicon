@@ -7,7 +7,11 @@ defmodule ExLexicon.Mixfile do
      elixir: "~> 1.2",
      build_embedded: Mix.env == :prod,
      start_permanent: Mix.env == :prod,
-     deps: deps()]
+     deps: deps(),
+     name: "ExLexicon",
+     source_url: "https://github.com/rtvu/exlexicon",
+     homepage_url: "https://github.com/rtvu/exlexicon",
+     docs: [extras: ["README.md"]]]
   end
 
   # Configuration for the OTP application
@@ -27,6 +31,6 @@ defmodule ExLexicon.Mixfile do
   #
   # Type "mix help deps" for more examples and options
   defp deps do
-    []
+    [{:ex_doc, "~> 0.14", only: :dev, runtime: false}]
   end
 end
