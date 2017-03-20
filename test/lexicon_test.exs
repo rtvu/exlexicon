@@ -13,7 +13,13 @@ defmodule LexiconTest do
     assert lexicon.node.nodes == %{}
   end
 
-  test "simple word list" do
-    lexicon = Lexicon.new(["a", "aa", "ab", "cat", "ca"])
+  test "word list checking" do
+    words = ["a", "aa", "ab", "cat", "ca", "locking"]
+    lexicon = Lexicon.new(words)
+    assert lexicon.size == length(words)
+    assert Lexicon.has_word?(lexicon, "cat")
+    assert Lexicon.has_prefix?(lexicon, "lock")
+    refute Lexicon.has_word?(lexicon, "ae")
+    refute Lexicon.has_prefix?(lexicon, "draw")
   end
 end

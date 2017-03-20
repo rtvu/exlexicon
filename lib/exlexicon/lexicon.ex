@@ -29,18 +29,21 @@ defmodule ExLexicon.Lexicon do
   def add(lexicon = %Lexicon{}, "") do
     lexicon
   end
+
   def add(lexicon = %Lexicon{}, [word]) do
     lexicon
     |> add(word)
   end
+
   def add(lexicon = %Lexicon{}, [word | words]) do
     lexicon
     |> add(word)
     |> add(words)
   end
+
   def add(lexicon = %Lexicon{node: node, size: size}, word) do
-    node = String.downcase(word)
-           |> String.codepoints()
+    node = word
+           |> prepare()
            |> add_helper(node)
     %Lexicon{lexicon | node: node, size: size + 1}
   end
@@ -60,10 +63,46 @@ defmodule ExLexicon.Lexicon do
   @doc """
   Checks if word is in the given 'lexicon'.
   """
-  def has_word?(lexicon, word) do
-
+  def has_word?(%Lexicon{node: node}, word) do
+    word = prepare(word)
+    contains_helper(node, word, true)
   end
+
   @doc """
   Checks if prefix is in the given 'lexicon'.
   """
+  def has_prefix?(%Lexicon{node: node}, word) do
+    word = prepare(word)
+    contains_helper(node, word, false)
+  end
+
+  defp contains_helper(%Node{is_word: true}, [], _require_word) do
+    true
+  end
+
+  defp contains_helper(%Node{is_word: false}, [], require_word) do
+    false == require_word
+  end
+
+
+  defp contains_helper(%Node{nodes: nodes}, [letter | letters], require_word) do
+    case Map.fetch(nodes, letter) do
+      {:ok, value} ->
+        contains_helper(value, letters, require_word)
+      _ ->
+        false
+    end
+  end
+
+  defp prepare(word) do
+    word
+    |> String.downcase()
+    |> String.codepoints()
+  end
+
+  defimpl Inspect do
+    def inspect(%Lexicon{size: size}, _opts) do
+      "%Lexicon{size: #{size}}"
+    end
+  end
 end
