@@ -6,11 +6,11 @@ defmodule LexiconTest do
   test "new lexicon" do
     lexicon = Lexicon.new()
     assert lexicon.size == 0
-    assert lexicon.node.is_word == false
-    assert lexicon.node.nodes == %{}
+    assert lexicon.trie.is_word == false
+    assert lexicon.trie.children == %{}
   end
 
-  test "word list checking" do
+  test "poplulated lexicon" do
     words = ["a", "aa", "ab", "cat", "ca", "locking"]
     lexicon = Lexicon.new(words)
     assert lexicon.size == length(words)

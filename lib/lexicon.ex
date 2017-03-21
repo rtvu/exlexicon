@@ -3,91 +3,82 @@ defmodule Lexicon do
   A lexicon (word list) implemented in Elixir.
   """
 
-  alias Lexicon.Node
+  alias Lexicon.Trie
 
-  defstruct [node: %Node{}, size: 0]
+  defstruct [trie: %Trie{}, size: 0]
 
   @doc """
-  Creates a 'lexicon' from a 'list'.
+  Creates a `lexicon` from an enumerable collection of words.
   """
-  def new(list) when is_list(list) do
-    new()
-    |> add(list)
+  def new(enumerable) do
+    lexicon = new()
+    Enum.reduce(enumerable, lexicon, fn(x, acc) -> add(acc, x) end)
   end
 
   @doc """
-  Returns a new empty 'lexicon'.
+  Returns a new empty `lexicon`.
   """
   def new() do
     %Lexicon{}
   end
 
   @doc """
-  Add a word or a word list to the 'lexicon'.
+  Adds a word to the `lexicon`.
   """
+  def add(lexicon, word)
+
   def add(lexicon = %Lexicon{}, "") do
     lexicon
   end
 
-  def add(lexicon = %Lexicon{}, [word]) do
-    lexicon
-    |> add(word)
-  end
-
-  def add(lexicon = %Lexicon{}, [word | words]) do
-    lexicon
-    |> add(word)
-    |> add(words)
-  end
-
-  def add(lexicon = %Lexicon{node: node, size: size}, word) do
-    node = word
+  def add(lexicon = %Lexicon{trie: trie, size: size}, word) do
+    trie = word
            |> prepare()
-           |> add_helper(node)
-    %Lexicon{lexicon | node: node, size: size + 1}
+           |> add_helper(trie)
+    %Lexicon{lexicon | trie: trie, size: size + 1}
   end
 
-  defp add_helper([], node) do
-    %Node{node | is_word: true}
+  defp add_helper([], trie) do
+    %Trie{trie | is_word: true}
   end
 
-  defp add_helper([letter | letters], node = %Node{nodes: nodes}) do
-    child = Map.get(nodes, letter, %Node{})
+  defp add_helper([letter | letters], trie = %Trie{children: children}) do
+    child = Map.get(children, letter, %Trie{value: letter})
     child = add_helper(letters, child)
 
-    nodes = Map.put(nodes, letter, child)
-    %Node{node | nodes: nodes}
+    children = Map.put(children, letter, child)
+    %Trie{trie | children: children}
   end
 
   @doc """
-  Checks if word is in the given 'lexicon'.
+  Checks if word is in the given `lexicon`.
   """
-  def has_word?(%Lexicon{node: node}, word) do
+  def has_word?(%Lexicon{trie: trie}, word) do
     word = prepare(word)
-    contains_helper(node, word, true)
+    contains_helper(trie, word, true)
   end
 
   @doc """
-  Checks if prefix is in the given 'lexicon'.
+  Checks if prefix is in the given `lexicon`.
   """
-  def has_prefix?(%Lexicon{node: node}, word) do
+  def has_prefix?(%Lexicon{trie: trie}, word) do
     word = prepare(word)
-    contains_helper(node, word, false)
+    contains_helper(trie, word, false)
   end
 
-  defp contains_helper(%Node{is_word: true}, [], _require_word) do
+  defp contains_helper(%Trie{is_word: true}, [], _require_word) do
     true
   end
 
-  defp contains_helper(%Node{is_word: false}, [], require_word) do
+  defp contains_helper(%Trie{is_word: false}, [], require_word) do
     false == require_word
   end
 
 
-  defp contains_helper(%Node{nodes: nodes}, [letter | letters], require_word) do
-    case Map.fetch(nodes, letter) do
-      {:ok, value} ->
-        contains_helper(value, letters, require_word)
+  defp contains_helper(%Trie{children: children}, [letter | letters], require_word) do
+    case Map.fetch(children, letter) do
+      {:ok, trie} ->
+        contains_helper(trie, letters, require_word)
       _ ->
         false
     end
