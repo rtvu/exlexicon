@@ -22,4 +22,11 @@ defmodule LexiconTest do
     refute Lexicon.has_prefix?(lexicon, "draw")
     refute Lexicon.has_word?(lexicon, "lockingt")
   end
+
+  test "adding to lexicon" do
+    lexicon = Lexicon.new()
+    lexicon = Lexicon.add(lexicon, "cat")
+    assert lexicon.size == 1
+    assert Lexicon.has_word?(lexicon, "cat")
+  end
 end

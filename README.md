@@ -10,8 +10,17 @@ To use Lexicon in your Mix projects, first add Lexicon as a dependency:
 
 ```elixir
 def deps do
-  [{:lexicon, "~> 0.0.1"}]
+  [{:lexicon, "~> 0.1.1"}]
 end
 ```
 
-After adding ExDoc as a dependency, run `mix deps.get` to install it.
+After adding Lexicon as a dependency, run `mix deps.get` to install it.
+
+## Usage
+
+```elixir
+lexicon = Lexicon.new(["cat", "dog"])
+lexicon = Lexicon.add("elephant")
+true == Lexicon.has_word?(lexicon, "cat")
+false == Lexicon.has_prefix?(lexicon, "a")
+```
