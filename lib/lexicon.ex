@@ -1,10 +1,9 @@
-defmodule ExLexicon.Lexicon do
+defmodule Lexicon do
   @moduledoc """
   A lexicon (word list) implemented in Elixir.
   """
 
-  alias ExLexicon.Lexicon
-  alias ExLexicon.Lexicon.Node
+  alias Lexicon.Node
 
   defstruct [node: %Node{}, size: 0]
 

@@ -1,10 +1,7 @@
 defmodule LexiconTest do
   use ExUnit.Case
 
-  doctest ExLexicon.Lexicon
-
-  alias ExLexicon.Lexicon
-  alias ExLexicon.Lexicon.Node
+  doctest Lexicon
 
   test "new lexicon" do
     lexicon = Lexicon.new()

@@ -1,8 +1,8 @@
-defmodule ExLexicon.Mixfile do
+defmodule Lexicon.Mixfile do
   use Mix.Project
 
   def project do
-    [app: :exlexicon,
+    [app: :lexicon,
      version: "0.0.1",
      elixir: "~> 1.2",
      build_embedded: Mix.env == :prod,
@@ -10,8 +10,8 @@ defmodule ExLexicon.Mixfile do
      description: description(),
      package: package(),
      deps: deps(),
-     name: "ExLexicon",
-     source_url: "https://github.com/rtvu/exlexicon",
+     name: "Lexicon",
+     source_url: "https://github.com/rtvu/lexicon",
      docs: [main: "readme", extras: ["README.md"]]]
   end
 
@@ -29,6 +29,6 @@ defmodule ExLexicon.Mixfile do
 
   defp package do
     [licenses: ["MIT License"],
-     links: %{"Github" => "https://github.com/rtvu/exlexicon"}]
+     links: %{"Github" => "https://github.com/rtvu/lexicon"}]
   end
 end
