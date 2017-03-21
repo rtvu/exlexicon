@@ -16,7 +16,10 @@ defmodule LexiconTest do
     assert lexicon.size == length(words)
     assert Lexicon.has_word?(lexicon, "cat")
     assert Lexicon.has_prefix?(lexicon, "lock")
-    refute Lexicon.has_word?(lexicon, "ae")
+    assert Lexicon.has_prefix?(lexicon, "locking")
+    refute Lexicon.has_word?(lexicon, "c")
+    refute Lexicon.has_word?(lexicon, "cate")
     refute Lexicon.has_prefix?(lexicon, "draw")
+    refute Lexicon.has_word?(lexicon, "lockingt")
   end
 end

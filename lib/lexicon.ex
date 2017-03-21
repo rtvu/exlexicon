@@ -8,7 +8,28 @@ defmodule Lexicon do
   defstruct [trie: %Trie{}, size: 0]
 
   @doc """
+  Returns a new empty `lexicon`.
+
+  ## Examples
+
+      iex> Lexicon.new()
+      #Lexicon<size: 0>
+
+  """
+  def new() do
+    %Lexicon{}
+  end
+
+  @doc """
   Creates a `lexicon` from an enumerable collection of words.
+
+  ## Examples
+
+      iex> Lexicon.new([])
+      #Lexicon<size: 0>
+      iex> Lexicon.new(["cat", "dog"])
+      #Lexicon<size: 2>
+
   """
   def new(enumerable) do
     lexicon = new()
@@ -16,14 +37,15 @@ defmodule Lexicon do
   end
 
   @doc """
-  Returns a new empty `lexicon`.
-  """
-  def new() do
-    %Lexicon{}
-  end
-
-  @doc """
   Adds a word to the `lexicon`.
+
+  ## Examples
+
+      iex> lexicon = Lexicon.new(["cat", "dog"])
+      #Lexicon<size: 2>
+      iex> Lexicon.add(lexicon, "elephant")
+      #Lexicon<size: 3>
+
   """
   def add(lexicon, word)
 
@@ -52,6 +74,15 @@ defmodule Lexicon do
 
   @doc """
   Checks if word is in the given `lexicon`.
+
+  ## Examples
+
+      iex> lexicon = Lexicon.new(["cat", "dog"])
+      iex> Lexicon.has_word?(lexicon, "cat")
+      true
+      iex> Lexicon.has_word?(lexicon, "ca")
+      false
+
   """
   def has_word?(%Lexicon{trie: trie}, word) do
     word = prepare(word)
@@ -60,6 +91,17 @@ defmodule Lexicon do
 
   @doc """
   Checks if prefix is in the given `lexicon`.
+
+  ## Examples
+
+      iex> lexicon = Lexicon.new(["cat", "dog"])
+      iex> Lexicon.has_prefix?(lexicon, "ca")
+      true
+      iex> Lexicon.has_prefix?(lexicon, "cat")
+      true
+      iex> Lexicon.has_prefix?(lexicon, "ba")
+      false
+
   """
   def has_prefix?(%Lexicon{trie: trie}, word) do
     word = prepare(word)
@@ -92,7 +134,7 @@ defmodule Lexicon do
 
   defimpl Inspect do
     def inspect(%Lexicon{size: size}, _opts) do
-      "%Lexicon{size: #{size}}"
+      "#Lexicon<size: #{size}>"
     end
   end
 end
