@@ -3,7 +3,7 @@ defmodule Lexicon.Mixfile do
 
   def project do
     [app: :lexicon,
-     version: "0.0.1-dev",
+     version: "0.1.0",
      elixir: "~> 1.2",
      build_embedded: Mix.env == :prod,
      start_permanent: Mix.env == :prod,
@@ -29,6 +29,7 @@ defmodule Lexicon.Mixfile do
 
   defp package do
     [licenses: ["MIT License"],
+     maintainers: [],
      links: %{"Github" => "https://github.com/rtvu/lexicon"}]
   end
 end
