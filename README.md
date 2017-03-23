@@ -10,7 +10,7 @@ To use Lexicon in your Mix projects, first add Lexicon as a dependency:
 
 ```elixir
 def deps do
-  [{:lexicon, "~> 0.1.1"}]
+  [{:lexicon, "~> 0.1.2"}]
 end
 ```
 

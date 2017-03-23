@@ -129,7 +129,7 @@ defmodule Lexicon do
   defp prepare(word) do
     word
     |> String.downcase()
-    |> String.codepoints()
+    |> String.graphemes()
   end
 
   defimpl Inspect do
