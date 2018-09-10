@@ -5,10 +5,10 @@ defmodule Lexicon do
 
   alias Lexicon.Trie
 
-  defstruct [trie: %Trie{}, size: 0]
+  defstruct trie: %Trie{}, size: 0
 
   @doc """
-  Returns a new empty `lexicon`.
+  Creates an empty `lexicon`.
 
   ## Examples
 
@@ -33,7 +33,39 @@ defmodule Lexicon do
   """
   def new(enumerable) do
     lexicon = new()
-    Enum.reduce(enumerable, lexicon, fn(x, acc) -> add(acc, x) end)
+    Enum.reduce(enumerable, lexicon, fn x, acc -> add(acc, x) end)
+  end
+
+  @doc """
+  Creates a `lexicon` from a saved `lexicon` file.
+
+  ## Examples
+
+      iex> Lexicon.from_file!("private/dictionary.lex")
+      #Lexicon<size: 127145>
+
+  """
+  def from_file!(path) do
+    lexicon =
+      path
+      |> File.read!()
+      |> :erlang.binary_to_term()
+
+    %Lexicon{} = lexicon
+  end
+
+  @doc """
+  Saves a `lexicon` to a file.
+
+  ## Examples
+
+      iex> ["cat"] |> Lexicon.new() |> Lexicon.save!("private/lexicon.lex")
+      :ok
+
+  """
+  def save!(lexicon = %Lexicon{}, path) do
+    lexicon_binary = :erlang.term_to_binary(lexicon, [:compressed])
+    File.write!(path, lexicon_binary)
   end
 
   @doc """
@@ -54,9 +86,11 @@ defmodule Lexicon do
   end
 
   def add(lexicon = %Lexicon{trie: trie, size: size}, word) do
-    trie = word
-           |> prepare()
-           |> add_helper(trie)
+    trie =
+      word
+      |> prepare()
+      |> add_helper(trie)
+
     %Lexicon{lexicon | trie: trie, size: size + 1}
   end
 
@@ -116,11 +150,11 @@ defmodule Lexicon do
     false == require_word
   end
 
-
   defp contains_helper(%Trie{children: children}, [letter | letters], require_word) do
     case Map.fetch(children, letter) do
       {:ok, trie} ->
         contains_helper(trie, letters, require_word)
+
       _ ->
         false
     end

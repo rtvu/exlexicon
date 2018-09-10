@@ -2,17 +2,19 @@ defmodule Lexicon.Mixfile do
   use Mix.Project
 
   def project do
-    [app: :lexicon,
-     version: "0.1.2",
-     elixir: "~> 1.4",
-     build_embedded: Mix.env == :prod,
-     start_permanent: Mix.env == :prod,
-     description: description(),
-     package: package(),
-     deps: deps(),
-     name: "Lexicon",
-     source_url: "https://github.com/rtvu/lexicon",
-     docs: [main: "readme", extras: ["README.md"]]]
+    [
+      app: :lexicon,
+      version: "0.1.3-dev",
+      elixir: "~> 1.4",
+      build_embedded: Mix.env() == :prod,
+      start_permanent: Mix.env() == :prod,
+      description: description(),
+      package: package(),
+      deps: deps(),
+      name: "Lexicon",
+      source_url: "https://github.com/rtvu/lexicon",
+      docs: [main: "readme", extras: ["README.md"]]
+    ]
   end
 
   def application do
@@ -20,7 +22,7 @@ defmodule Lexicon.Mixfile do
   end
 
   defp deps do
-    [{:ex_doc, "~> 0.14", only: :dev, runtime: false}]
+    [{:ex_doc, "~> 0.19", only: :dev, runtime: false}]
   end
 
   defp description do
@@ -28,8 +30,10 @@ defmodule Lexicon.Mixfile do
   end
 
   defp package do
-    [licenses: ["MIT License"],
-     maintainers: [],
-     links: %{"Github" => "https://github.com/rtvu/lexicon"}]
+    [
+      licenses: ["MIT License"],
+      maintainers: [],
+      links: %{"Github" => "https://github.com/rtvu/lexicon"}
+    ]
   end
 end
