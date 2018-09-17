@@ -5,7 +5,7 @@ defmodule Lexicon do
 
   alias Lexicon.Trie
 
-  defstruct trie: %Trie{}, size: 0
+  defstruct prefix: %Trie{}, suffix: %Trie{}, size: 0
 
   @doc """
   Creates an empty `lexicon`.
@@ -41,7 +41,7 @@ defmodule Lexicon do
 
   ## Examples
 
-      iex> Lexicon.from_file!("private/dictionary.lex")
+      iex> Lexicon.from_file!("resource/dictionary.lex")
       #Lexicon<size: 127145>
 
   """
@@ -59,7 +59,7 @@ defmodule Lexicon do
 
   ## Examples
 
-      iex> ["cat"] |> Lexicon.new() |> Lexicon.save!("private/lexicon.lex")
+      iex> ["cat"] |> Lexicon.new() |> Lexicon.save!("resource/lexicon.lex")
       :ok
 
   """
@@ -85,13 +85,19 @@ defmodule Lexicon do
     lexicon
   end
 
-  def add(lexicon = %Lexicon{trie: trie, size: size}, word) do
-    trie =
+  def add(lexicon = %Lexicon{prefix: prefix, suffix: suffix, size: size}, word) do
+    prefix =
       word
       |> prepare()
-      |> add_helper(trie)
+      |> add_helper(prefix)
 
-    %Lexicon{lexicon | trie: trie, size: size + 1}
+    suffix =
+      word
+      |> String.reverse()
+      |> prepare()
+      |> add_helper(suffix)
+
+    %Lexicon{lexicon | prefix: prefix, suffix: suffix, size: size + 1}
   end
 
   defp add_helper([], trie) do
@@ -118,9 +124,9 @@ defmodule Lexicon do
       false
 
   """
-  def has_word?(%Lexicon{trie: trie}, word) do
-    word = prepare(word)
-    contains_helper(trie, word, true)
+  def has_word?(%Lexicon{prefix: trie}, word) do
+    prepared_word = prepare(word)
+    contains_helper(trie, prepared_word, true)
   end
 
   @doc """
@@ -137,9 +143,28 @@ defmodule Lexicon do
       false
 
   """
-  def has_prefix?(%Lexicon{trie: trie}, word) do
-    word = prepare(word)
-    contains_helper(trie, word, false)
+  def has_prefix?(%Lexicon{prefix: trie}, word) do
+    prepared_word = prepare(word)
+    contains_helper(trie, prepared_word, false)
+  end
+
+  @doc """
+  Checks if suffix is in the given `lexicon`.
+
+  ## Examples
+
+      iex> lexicon = Lexicon.new(["cat", "dog"])
+      iex> Lexicon.has_suffix?(lexicon, "at")
+      true
+      iex> Lexicon.has_suffix?(lexicon, "cat")
+      true
+      iex> Lexicon.has_prefix?(lexicon, "ba")
+      false
+
+  """
+  def has_suffix?(%Lexicon{suffix: trie}, word) do
+    prepared_word = word |> String.reverse() |> prepare()
+    contains_helper(trie, prepared_word, false)
   end
 
   defp contains_helper(%Trie{is_word: true}, [], _require_word) do

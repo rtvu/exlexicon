@@ -6,8 +6,10 @@ defmodule LexiconTest do
   test "new lexicon" do
     lexicon = Lexicon.new()
     assert lexicon.size == 0
-    assert lexicon.trie.is_word == false
-    assert lexicon.trie.children == %{}
+    assert lexicon.prefix.is_word == false
+    assert lexicon.prefix.children == %{}
+    assert lexicon.suffix.is_word == false
+    assert lexicon.suffix.children == %{}
   end
 
   test "poplulated lexicon" do
@@ -17,9 +19,11 @@ defmodule LexiconTest do
     assert Lexicon.has_word?(lexicon, "cat")
     assert Lexicon.has_prefix?(lexicon, "lock")
     assert Lexicon.has_prefix?(lexicon, "locking")
+    assert Lexicon.has_suffix?(lexicon, "ing")
     refute Lexicon.has_word?(lexicon, "c")
     refute Lexicon.has_word?(lexicon, "cate")
     refute Lexicon.has_prefix?(lexicon, "draw")
+    refute Lexicon.has_suffix?(lexicon, "tion")
     refute Lexicon.has_word?(lexicon, "lockingt")
   end
 
